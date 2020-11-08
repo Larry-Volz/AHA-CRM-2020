@@ -1,0 +1,14 @@
+body {color: black;
+	font-size:12;
+	font-family: arial}
+p {text-align: left}
+h1 {color: #000080;
+	font-weight: bold;
+	font-size: 36;
+	font-family: arial;
+	text-transform: capitalize;
+	text-align: center}
+h4 {color: black;
+	font-size:12;
+	font-family: arial;
+	font-weight: bold}

@@ -1,0 +1,5 @@
+This is an experimental file.
+
+It’s name is ‘mydata.txt’ and I want to see what kind of formatting will come through and if I can attach it to an e-mail using Richard Heyes’ HTML MIME class for PHP.
+
+Cross your fingers…

@@ -1,0 +1,1181 @@
+<HTML>
+
+<HEAD>
+<TITLE>AHC_Program_Counselor_Test4</TITLE>
+<SCRIPT LANGUAGE="javascript">
+<!--
+function SGSelectAdjacentRadioButton ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the radio button adjacent to the text element by looping through all elements
+   //          in form looking for a radio button element that matches the name of the text element with a value
+   //          of "SGOTHR".
+	  //          If a radio button matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the radio button to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "radio") && (e.name == objElement.name) && (e.value == "SGOTHR")) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+	  }
+}
+
+
+function SGClearRadioButtonText ( objElement ) {
+
+   // Purpose: Clears the text value adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then its value is cleared.
+   // Accepts: objElement - a radio button element
+
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.value = "";
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnRadioButtonText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a radio button element
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.focus();
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnCheckBoxText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last checkbox by looping through all elements
+   //          in form looking for a text element that matches the name of the checkbox element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a checkbox element
+
+   if (objElement.type == "checkbox") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            if ( objElement.checked == true ) {
+               e.focus();
+            }
+            else {
+               e.value = ""
+            }
+         }
+      }
+   }
+}
+
+
+function SGSelectAdjacentCheckBox ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the checkbox adjacent to the text element by looping through all elements
+   //          in form looking for a checkbox element that matches the name of the text element.
+   //          If a checkbox matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the checkbox to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "checkbox") && (e.name == objElement.name)) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+   }
+}
+
+
+function SGEnforceUniqueRank( objElement ) {
+
+   // Purpose: Determines if the selected dropdownmenu response value is already selected in 
+   //          dropdownmenu value in the same question. If so, it clears the dropdown response
+   //          value of the other matching response. In this way, ranking question responses
+   //          are guaranteed to be unique.
+   // Accepts: objElement - a dropdownmenu element
+
+   if (objElement.type == "select-one") {
+      // Determine the survey ID and question ID.
+      // This is used to locate the form elements in the set of ranked responses.
+      var strSQID = SGParseSurveyIDQuestionID(objElement.name);
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         // Only examine other dropdownmenu elements.
+         if (e.type == "select-one") {
+            if (e.name != objElement.name ) {
+               var strSQIDCompare = SGParseSurveyIDQuestionID(e.name);
+               if (strSQID == strSQIDCompare ) {
+                  // If question numbers then look for a matching ranked response value to reset.
+                  if (e.value == objElement.value) {
+                     e.value = "";
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+
+function SGParseSurveyIDQuestionID( strElementName ) {
+
+   // Purpose: Returns the survey ID and question ID portion of the element name.
+   // Accepts: strElementName - a string containing a form element name in following format
+   //          SURVEYID*@^/QUESTIONID*@^/RANKORDER
+   // Example: 35*@^/558*@^/2 returns 35*@^/558
+
+   var strSurveyQuestion = "";
+
+   // Parse off survey and question ID from name
+   // Example: 35*@^/558
+
+   var intSlashPos = strElementName.indexOf("/");
+   if ( intSlashPos > 0 ) {
+      var intSplatPos = strElementName.indexOf("*",intSlashPos);
+      if ( intSplatPos > 0 ) {
+         strSurveyQuestion = strElementName.substring(0,intSplatPos);
+      }
+      else {
+         strSurveyQuestion = "";
+      }
+   }
+   else {
+      strSurveyQuestion = "";
+   }
+
+   return strSurveyQuestion;
+}
+
+-->
+</SCRIPT>
+</HEAD>
+
+<STYLE>
+<!--
+.SGHeader    { font-family: Arial; font-size: 24pt; color: #000080; font-weight: bold; text-align: Left }
+.SGInstructions { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left; margin-bottom: -12 }
+.SGSection   { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestion  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestionCenter{ font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Center}
+.SGResponse  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left; background-color: #FFFFFF }
+.SGResponseInstructions { font-family: Arial; font-size: 10pt; color: #000000; font-weight: bold; text-align: Left }
+.SGNormalText    { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }
+.SGWatermark  { font-family: Arial; font-size: 8pt; color: #000000; font-weight: normal; text-align: Left }
+.SGHorizontalLine { color: #808080 }
+-->
+</STYLE>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<H1 CLASS="SGHeader">AHC_Program_Counselor_Test4</H1>
+
+<P CLASS="SGInstructions">Instructions</P>
+<P CLASS="SGNormalText">Answer questions to the best of your ability. For most answers, check the boxes most applicable to you or fill in the blanks.</P>
+
+<FORM ACTION="http://surveygold.com/cgi-bin/appendresults.asp" METHOD="POST">
+
+<INPUT TYPE="hidden" NAME="DlmOption" VALUE="M">
+<INPUT TYPE="hidden" NAME="Survey" VALUE="AHC_Program_Counselor_Test4">
+<INPUT TYPE="hidden" NAME="SGEMT" VALUE="%l%a%r%r%y%TA%a%m%e%r%i%c%a%n%h%y%p%n%o%s%i%s%c%l%i%n%i%c%TD%c%o%m%">
+<INPUT TYPE="hidden" NAME="ID" VALUE="7B0F5347426645BF9D4C978357D31508">
+<INPUT TYPE="hidden" NAME="Notify" VALUE="T">
+<INPUT TYPE="hidden" NAME="ConfirmationURL" VALUE="http://www.americanhypnosisclinic.com/intranet/pc_testing_thankyou.htm">
+<INPUT TYPE="hidden" NAME="SGBGCOLOR" VALUE="#FFFFFF">
+<INPUT TYPE="hidden" NAME="SGSTYLE" VALUE="<STYLE><!--.SGSection { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }.SGNormalText { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }.SGHorizontalLine { color: #808080 }--></STYLE>">
+<INPUT TYPE="hidden" NAME="SGMRQMSG" VALUE="Please fill in all required fields.">
+<INPUT TYPE="hidden" NAME="SID" VALUE="34">
+<INPUT TYPE="hidden" NAME="BBS" VALUE="F">
+
+<HR NOSHADE SIZE=10 WIDTH=100%>
+
+<H3 CLASS="SGSection">Please provide the following (*required)</H3>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+First Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRF" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Last Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRL" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Email*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRE" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">American Hypnosis Clinic On-line Contact Management System Knowledge</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq1"></A>1.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Where will you find the calls that are assigned to the PCs each day? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/415*@^/1" VALUE="a.	All Clients - B1 - Call Ams (8:00am-12:00pm)">a.	All Clients - B1 - Call Ams (8:00am-12:00pm)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/415*@^/1" VALUE="b.	All Clients - All Database Entries By Last Name">b.	All Clients - All Database Entries By Last Name
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/415*@^/1" VALUE="c.	All Clients - B1 - Call Immediately">c.	All Clients - B1 - Call Immediately
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq2"></A>2.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">How will you know which Call Immediately's are yours to call? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/416*@^/1" VALUE="a.	Your name will appear in the &quot;PC Name&quot; field">a.	Your name will appear in the "PC Name" field
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/416*@^/1" VALUE="b.	Any lead is open to call anytime">b.	Any lead is open to call anytime
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/416*@^/1" VALUE="c.	Your name will appear in the &quot;Record Manager&quot; field">c.	Your name will appear in the "Record Manager" field
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq3"></A>3.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which fields need to be changed to denote a sale? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/417*@^/1" VALUE="a.	Sales Contact Next and Record Manager">a.	Sales Contact Next and Record Manager
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/417*@^/1" VALUE="b.	Sales Category and Date Client Sold">b.	Sales Category and Date Client Sold
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/417*@^/1" VALUE="c.	Sales Stage and Record Manager">c.	Sales Stage and Record Manager
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/417*@^/1" VALUE="d.	Sales Category, Sales Stage, Date Client Sold, and Record Manager">d.	Sales Category, Sales Stage, Date Client Sold, and Record Manager
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq4"></A>4.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When is Database lead open for any PC to call? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/418*@^/1" VALUE="a.	When there is no Record Manager listed (blank lead)">a.	When there is no Record Manager listed (blank lead)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/418*@^/1" VALUE="b.	Only after 12:00pm">b.	Only after 12:00pm
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/418*@^/1" VALUE="c.	Leads are never open for any PC to call">c.	Leads are never open for any PC to call
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq5"></A>5.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">After a lead from Call Immediately has been initially contacted but not spoken to, you need to… </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/419*@^/1" VALUE="a.	Make specific notes and move on to the next Call Immediately">a.	Make specific notes and move on to the next Call Immediately
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/419*@^/1" VALUE="b.	Make specific notes and move the lead to the next Sales Stage">b.	Make specific notes and move the lead to the next Sales Stage
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/419*@^/1" VALUE="c.	Move on to the next Call Immediately">c.	Move on to the next Call Immediately
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq6"></A>6.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Leads put in 99 - Waiting On Deposit are considered a Sale. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/420*@^/1" VALUE="True">True
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/420*@^/1" VALUE="False">False
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq7"></A>7.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">A message should be left for a lead… </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/421*@^/1" VALUE="a.	Every time the lead is called">a.	Every time the lead is called
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/421*@^/1" VALUE="b.	Every day">b.	Every day
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/421*@^/1" VALUE="c.	Only with the initial contact">c.	Only with the initial contact
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/421*@^/1" VALUE="d.	Every 48 hours">d.	Every 48 hours
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq8"></A>8.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When can a PC put their name on as Record manager? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/422*@^/1" VALUE="a.	When they get the lead through the IM">a.	When they get the lead through the IM
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/422*@^/1" VALUE="b.	When a solid repore has been established">b.	When a solid repore has been established
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/422*@^/1" VALUE="c.	When the PC closes the sale">c.	When the PC closes the sale
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/422*@^/1" VALUE="d.	When the PC has left the initial message">d.	When the PC has left the initial message
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq9"></A>9.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When 2 PCs work equally hard to close a sale, those 2 PCs should split the commission for the sale. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/423*@^/1" VALUE="True">True
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/423*@^/1" VALUE="False">False
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq10"></A>10.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When scheduling a Richmond client, what should be included in the calendar entry? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/424*@^/1" VALUE="a.	Client Name, Program Abbreviation, and the number 1">a.	Client Name, Program Abbreviation, and the number 1
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/424*@^/1" VALUE="b.	Client Name and Program Abbreviation">b.	Client Name and Program Abbreviation
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/424*@^/1" VALUE="c.	Client Name, Client Number, and Program Abbreviation">c.	Client Name, Client Number, and Program Abbreviation
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq11"></A>11.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">It is not acceptable to add an appointment onto a therapist's calendar. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/425*@^/1" VALUE="True">True
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/425*@^/1" VALUE="False">False
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq12"></A>12.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What should be included in the Task Name field? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/426*@^/1" VALUE="a.	Client Name">a.	Client Name
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/426*@^/1" VALUE="b.	Client Number and Program Abbreviation">b.	Client Number and Program Abbreviation
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/426*@^/1" VALUE="c.	Client Name and Program Abbreviation">c.	Client Name and Program Abbreviation
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq13"></A>13.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What date should the PC set the Task for? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/427*@^/1" VALUE="a.	The date of the sale">a.	The date of the sale
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/427*@^/1" VALUE="b.	The date to charge the deposit">b.	The date to charge the deposit
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/427*@^/1" VALUE="c.	The date the Task was created">c.	The date the Task was created
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq14"></A>14.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Who should the Task be assigned to? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/428*@^/1" VALUE="a.	Yourself">a.	Yourself
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/428*@^/1" VALUE="b.	The Therapist">b.	The Therapist
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/428*@^/1" VALUE="c.	Meredith Barnes">c.	Meredith Barnes
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/428*@^/1" VALUE="d.	Everyone on the list">d.	Everyone on the list
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq15"></A>15.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When you receive an Instant Message (IM) stating "(Insert PC Name) lead coming for you", it means… </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/429*@^/1" VALUE="a.	There is Database lead entered for you">a.	There is Database lead entered for you
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/429*@^/1" VALUE="b.	There is an existing lead calling for you">b.	There is an existing lead calling for you
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/429*@^/1" VALUE="c.	There is a live lead on the phone for you">c.	There is a live lead on the phone for you
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq16"></A>16.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">If you are not available to take a lead when it's your turn… </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/430*@^/1" VALUE="a.	The lead will be waiting for you in the Database">a.	The lead will be waiting for you in the Database
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/430*@^/1" VALUE="b.	The lead will go to the next PC in rotation">b.	The lead will go to the next PC in rotation
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/430*@^/1" VALUE="c.	The lead will have to call back for you">c.	The lead will have to call back for you
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq17"></A>17.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Back-up paperwork can be found in Webexone under… </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/431*@^/1" VALUE="a.	My Favorites">a.	My Favorites
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/431*@^/1" VALUE="b.	Documents">b.	Documents
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/431*@^/1" VALUE="c.	Tools">c.	Tools
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq18"></A>18.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">For Affiliate sales, what information needs to be included in the Task notes? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/432*@^/1" VALUE="a.	Name of affiliate">a.	Name of affiliate
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/432*@^/1" VALUE="b.	Name of affiliate and practice name">b.	Name of affiliate and practice name
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/432*@^/1" VALUE="c.	Practice name">c.	Practice name
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/432*@^/1" VALUE="d.	Nothing…that information is already in the Database">d.	Nothing…that information is already in the Database
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq19"></A>19.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">The payment amounts and dates on the Promissory Notes are to left blank for the client to fill out upon receipt. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/433*@^/1" VALUE="	True">	True
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/433*@^/1" VALUE="	False">	False
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq20"></A>20.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">How will you let the office know how many hours you have worked? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/434*@^/1" VALUE="a.	Email either Heather or Meredith">a.	Email either Heather or Meredith
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/434*@^/1" VALUE="b.	Complete the Time Sheet on the Webexone Intranet">b.	Complete the Time Sheet on the Webexone Intranet
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="34*@^/434*@^/1" VALUE="c.	Fill out the Employee In/Out Log daily and the main office will calculate your hours">c.	Fill out the Employee In/Out Log daily and the main office will calculate your hours
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+  <INPUT TYPE="hidden" NAME="SGRQQNO" VALUE="1*@^/2*@^/3*@^/4*@^/5*@^/6*@^/7*@^/8*@^/9*@^/10*@^/11*@^/12*@^/13*@^/14*@^/15*@^/16*@^/17*@^/18*@^/19*@^/20">
+  <INPUT TYPE="hidden" NAME="SGRQQID" VALUE="415*@^/416*@^/417*@^/418*@^/419*@^/420*@^/421*@^/422*@^/423*@^/424*@^/425*@^/426*@^/427*@^/428*@^/429*@^/430*@^/431*@^/432*@^/433*@^/434">
+  <INPUT TYPE="hidden" NAME="SGRQQST" VALUE="Where will you find the calls that are assigned to the PCs each day?*@^/How will you know which Call Immediately's are yours to call?*@^/Which fields need to be changed to denote a sale?*@^/When is Database lead open for any PC to call?*@^/After a lead from Call Immediately has been initially contacted but not spoken to, you need to…*@^/Leads put in 99 - Waiting On Deposit are considered a Sale.*@^/A message should be left for a lead…*@^/When can a PC put their name on as Record manager?*@^/When 2 PCs work equally hard to close a sale, those 2 PCs should split the commission for the sale.*@^/When scheduling a Richmond client, what should be included in the calendar entry?*@^/It is not acceptable to add an appointment onto a therapist's calendar.*@^/What should be included in the Task Name field?*@^/What date should the PC set the Task for?*@^/Who should the Task be assigned to?*@^/When you receive an Instant Message (IM) stating ''(Insert PC Name) lead coming for you'', it means…*@^/If you are not available to take a lead when it's your turn…*@^/Back-up paperwork can be found in Webexone under…*@^/For Affiliate sales, what information needs to be included in the Task notes?*@^/The payment amounts and dates on the Promissory Notes are to left blank for the client to fill out upon receipt.*@^/How will you let the office know how many hours you have worked?">
+  <INPUT TYPE="hidden" NAME="SGRQQRA" VALUE="1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1">
+  <INPUT TYPE="hidden" NAME="SGRFRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRLRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRERQ" VALUE="T">
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P ALIGN="center">
+  <INPUT TYPE="submit" VALUE="Submit Your Responses">
+</P>
+
+</FORM>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P class="SGWatermark">Created with SurveyGold <a href="http://surveygold.com" style="text-decoration:none;"><font color="#000000">survey software</font></a> - ©2004 Golden Hills Software, Inc. - <A href="http://surveygold.com">http://surveygold.com</A></P>
+
+</BODY>
+
+</HTML>

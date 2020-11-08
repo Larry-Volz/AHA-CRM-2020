@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<script language="javascript" type="text/javascript" src="knowledgebase_data.js";></script>
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>New Page 1</title>
+<meta name="Microsoft Border" content="r, default">
+</head>
+
+<body><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<script language="javascript">
+function get_sales_article(){
+	//retrieve choice
+	sales_choice = document.article_form.sales_article_choice.value;
+	//Print stuff in boxes
+	document.article_form.article_title_display.value = sales_article_title[sales_choice];
+	document.article_form.article_number_display.value = sales_article_no[sales_choice];
+	document.article_form.sales_category_display.value = sales_category[sales_choice];
+	document.article_form.applies_to_display.value = sales_applies_to[sales_choice];
+	document.article_form.summary_display.value = sales_summary[sales_choice];
+	document.article_form.details_display.value = sales_details[sales_choice];
+	document.article_form.article_display.value = sales_article[sales_choice];
+	
+		}
+		
+/*function get_class_article(){
+	sales_choice = document.article_form.sales_article_choice.value //retrieve choice
+	document.article_form.article_title_display.value = sales_article_title[sales_choice]
+		}	*/	
+
+</script>
+
+<p align="center"><b><font size="5" color="#000080">AHC Knowledge Base</font></b></p>
+<table border="0" width="100%" id="table2">
+	<tr>
+		<td width="415">&nbsp;</td>
+		<td><!--<iframe name="inline_frame" width = "400" height="500" src="blank_inline_frame.htm">
+		Your browser does not support inline frames or is currently configured not to display inline frames.
+		</iframe>--></td>
+	</tr>
+</table>
+<table border="0" width="100%" id="table1">
+	<tr>
+		<td width="486">
+		
+<form name ="article_form" >
+	<select size="1" name="sales_article_choice" onchange="get_sales_article();">
+		<option value="0">Pick A Sales Article</option>	
+		<option value="1">Guiding Emotions to Close More Sales</option>
+	</select>
+	
+	&lt;-- CHOOSE HERE</td>
+		<td>
+		<p align="center"> 
+		&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="486">
+		
+		<p> 
+		<input name="article_title_display" value = "Article Title" size="59" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()">
+		
+		<input name="article_number_display" value = "Article Number" size="15" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()"></p>
+		<p> 
+		<br>
+				
+		<input name="sales_category_display" value = "Sales Category" size="44" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()"><br>
+		<input name="applies_to_display" value = "Applies to" size="46" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()"></p>
+		<p> 
+				
+		<textarea name="summary_display" rows="6" cols="57" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()">Article Summary
+		</textarea></p>
+		<p> 
+		
+		<textarea name="details_display" rows="10" cols="45" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()">Article Details
+		</textarea></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="486" valign="top">
+		
+		<textarea name="article_display" rows="25" cols="57" style="font-weight: 700; float:left" readonly="readonly" onfocus="this.blur()">Full Article Text
+		</textarea></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+</form>
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>&nbsp;</p>
+
+</td></tr><!--msnavigation--></table></body>
+
+</html>

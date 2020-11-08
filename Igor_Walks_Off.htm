@@ -1,0 +1,111 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Igor's Animations</title>
+
+ <script language = "JavaScript" type="text/javascript" >
+ 
+ function preload(){
+ 	a0 = new Image();
+ 	a0.src = "Igor_walking_0.jpg"
+ 	a1= new Image();
+ 	a1.src = "Igor_animated1.gif"
+ 	a2 = new Image();
+ 	a2.src = "Igor_walk_off_animation1.gif;"
+ 	}
+ 
+ preload()
+ </script> 
+ 
+
+ 
+<script language="javascript" type="text/javascript">
+
+function Igor_standing(){
+	document.images[0].src="Igor_animated1.gif"; //then show Igor just standing around again
+	window.setTimeout("change_Igor()",1200000); //600,000 = 1 hour.  1,200,000 should be two
+	}
+
+
+function change_Igor(){ // picks a person's testimonial page to put in the frame at random
+//	rnd=Math.random() //in case I want to make behavior random later
+//	rnd_1_10=Math.round(rnd)*10;
+rnd_1_10 = 4 //temporarily force a true statement
+		if (rnd_1_10 <= 5) { //if 1 in 2 chance
+			document.images[0].src="Igor_walk_off_animation1.gif"; // then show Igor walking off
+		window.setTimeout("Igor_standing()",66000);	 //Creates a loop as long as the animation (66 sec) then loop to Igor standing
+		}		
+	}
+	
+function reload_page(){
+	window.location.value="Igor_Walks_Off.htm"
+	}
+
+</script>
+
+</head>
+
+<body onload="preload()">
+
+<td valign="top">
+
+<img src="Igor_animated1.gif" name "picture_showing" border="0">
+
+<script language="javascript" type="text/javascript">
+
+	Igor_standing()
+//		window.setTimeout("change_Igor()",2000);	 //Creates a loop every hour
+//	reload_page()
+
+
+</script>
+
+
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>
+<iframe name="I1" src="right_border_testimonials.php" width="218" height="560" border="0" frameborder="0" scrolling="no">
+Your browser does not support inline frames or is currently configured not to display inline frames.
+</iframe></p>
+
+</td></tr><!--msnavigation--></table></body>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>
+<body onload="preload()"><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<br>
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>
+<iframe name="I1" src="right_border_testimonials.php" width="218" height="560" border="0" frameborder="0" scrolling="no">
+Your browser does not support inline frames or is currently configured not to display inline frames.
+</iframe></p>
+
+</td></tr><!--msnavigation--></table></body>
+ <!-- embed silly sounds for Igor Character 
+<embed src="fudhello.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="astalavista.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="burp.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="church lady.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="clearthroat.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="dontouch.wav" hidden=true autostart=false LOOP=false hidden>
+<embed src="evilaugh.wav" true autostart=false LOOP=false hidden>
+<embed src="flush.wav" true autostart=false LOOP=false hidden>
+<embed src="fuddquiet.wav" true autostart=false LOOP=false hidden>
+<embed src="hal, always human error.wav" true autostart=false LOOP=false hidden>
+<embed src="i am your father.wav" true autostart=false LOOP=false hidden>
+<body onload="preload()"> -->
+
+</p>
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>
+<iframe name="I1" src="right_border_testimonials.php" width="218" height="560" border="0" frameborder="0" scrolling="no">
+Your browser does not support inline frames or is currently configured not to display inline frames.
+</iframe></p>
+
+</td></tr><!--msnavigation--></table></body>
+
+</html>

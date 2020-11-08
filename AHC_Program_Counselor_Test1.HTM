@@ -1,0 +1,823 @@
+<HTML>
+
+<HEAD>
+<TITLE>AHC_Program_Counselor_Test1</TITLE>
+<SCRIPT LANGUAGE="javascript">
+<!--
+function SGSelectAdjacentRadioButton ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the radio button adjacent to the text element by looping through all elements
+   //          in form looking for a radio button element that matches the name of the text element with a value
+   //          of "SGOTHR".
+	  //          If a radio button matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the radio button to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "radio") && (e.name == objElement.name) && (e.value == "SGOTHR")) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+	  }
+}
+
+
+function SGClearRadioButtonText ( objElement ) {
+
+   // Purpose: Clears the text value adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then its value is cleared.
+   // Accepts: objElement - a radio button element
+
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.value = "";
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnRadioButtonText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a radio button element
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.focus();
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnCheckBoxText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last checkbox by looping through all elements
+   //          in form looking for a text element that matches the name of the checkbox element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a checkbox element
+
+   if (objElement.type == "checkbox") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            if ( objElement.checked == true ) {
+               e.focus();
+            }
+            else {
+               e.value = ""
+            }
+         }
+      }
+   }
+}
+
+
+function SGSelectAdjacentCheckBox ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the checkbox adjacent to the text element by looping through all elements
+   //          in form looking for a checkbox element that matches the name of the text element.
+   //          If a checkbox matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the checkbox to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "checkbox") && (e.name == objElement.name)) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+   }
+}
+
+
+function SGEnforceUniqueRank( objElement ) {
+
+   // Purpose: Determines if the selected dropdownmenu response value is already selected in 
+   //          dropdownmenu value in the same question. If so, it clears the dropdown response
+   //          value of the other matching response. In this way, ranking question responses
+   //          are guaranteed to be unique.
+   // Accepts: objElement - a dropdownmenu element
+
+   if (objElement.type == "select-one") {
+      // Determine the survey ID and question ID.
+      // This is used to locate the form elements in the set of ranked responses.
+      var strSQID = SGParseSurveyIDQuestionID(objElement.name);
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         // Only examine other dropdownmenu elements.
+         if (e.type == "select-one") {
+            if (e.name != objElement.name ) {
+               var strSQIDCompare = SGParseSurveyIDQuestionID(e.name);
+               if (strSQID == strSQIDCompare ) {
+                  // If question numbers then look for a matching ranked response value to reset.
+                  if (e.value == objElement.value) {
+                     e.value = "";
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+
+function SGParseSurveyIDQuestionID( strElementName ) {
+
+   // Purpose: Returns the survey ID and question ID portion of the element name.
+   // Accepts: strElementName - a string containing a form element name in following format
+   //          SURVEYID*@^/QUESTIONID*@^/RANKORDER
+   // Example: 35*@^/558*@^/2 returns 35*@^/558
+
+   var strSurveyQuestion = "";
+
+   // Parse off survey and question ID from name
+   // Example: 35*@^/558
+
+   var intSlashPos = strElementName.indexOf("/");
+   if ( intSlashPos > 0 ) {
+      var intSplatPos = strElementName.indexOf("*",intSlashPos);
+      if ( intSplatPos > 0 ) {
+         strSurveyQuestion = strElementName.substring(0,intSplatPos);
+      }
+      else {
+         strSurveyQuestion = "";
+      }
+   }
+   else {
+      strSurveyQuestion = "";
+   }
+
+   return strSurveyQuestion;
+}
+
+-->
+</SCRIPT>
+</HEAD>
+
+<STYLE>
+<!--
+.SGHeader    { font-family: Arial; font-size: 24pt; color: #000080; font-weight: bold; text-align: Left }
+.SGInstructions { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left; margin-bottom: -12 }
+.SGSection   { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestion  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestionCenter{ font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Center}
+.SGResponse  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left; background-color: #FFFFFF }
+.SGResponseInstructions { font-family: Arial; font-size: 10pt; color: #000000; font-weight: bold; text-align: Left }
+.SGNormalText    { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }
+.SGWatermark  { font-family: Arial; font-size: 8pt; color: #000000; font-weight: normal; text-align: Left }
+.SGHorizontalLine { color: #808080 }
+-->
+</STYLE>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<H1 CLASS="SGHeader">AHC_Program_Counselor_Test1</H1>
+
+<P CLASS="SGInstructions">Instructions</P>
+<P CLASS="SGNormalText">Answer questions to the best of your ability. For most answers, check the boxes most applicable to you or fill in the blanks.</P>
+
+<FORM ACTION="http://surveygold.com/cgi-bin/appendresults.asp" METHOD="POST">
+
+<INPUT TYPE="hidden" NAME="DlmOption" VALUE="M">
+<INPUT TYPE="hidden" NAME="Survey" VALUE="AHC_Program_Counselor_Test1">
+<INPUT TYPE="hidden" NAME="SGEMT" VALUE="%l%a%r%r%y%TA%a%m%e%r%i%c%a%n%h%y%p%n%o%s%i%s%c%l%i%n%i%c%TD%c%o%m%">
+<INPUT TYPE="hidden" NAME="ID" VALUE="7B0F5347426645BF9D4C978357D31508">
+<INPUT TYPE="hidden" NAME="Notify" VALUE="T">
+<INPUT TYPE="hidden" NAME="ConfirmationURL" VALUE="http://americanhypnosisclinic.com/intranet/PC_testing_response.htm">
+<INPUT TYPE="hidden" NAME="SGBGCOLOR" VALUE="#FFFFFF">
+<INPUT TYPE="hidden" NAME="SGSTYLE" VALUE="<STYLE><!--.SGSection { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }.SGNormalText { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }.SGHorizontalLine { color: #808080 }--></STYLE>">
+<INPUT TYPE="hidden" NAME="SGMRQMSG" VALUE="Please fill in all required fields.">
+<INPUT TYPE="hidden" NAME="SID" VALUE="31">
+<INPUT TYPE="hidden" NAME="BBS" VALUE="F">
+
+<HR NOSHADE SIZE=10 WIDTH=100%>
+
+<H3 CLASS="SGSection">Please provide the following (*required)</H3>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+First Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRF" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Last Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRL" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Email*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRE" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Frequently Asked Questions About Hypnosis</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq1"></A>1.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">True or False:  People under hypnosis are more likely to tell their secrets (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/359*@^/1" VALUE="True">True
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/359*@^/1" VALUE="False">False
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq2"></A>2.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Do people remember what happens when in hypnosis? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/360*@^/1" VALUE="Usually">Usually
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/360*@^/1" VALUE="Never">Never
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/360*@^/1" VALUE="Always">Always
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq3"></A>3.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Can a hypnotist make someone do something against their morals or better judgement? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/361*@^/1" VALUE="Never">Never
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/361*@^/1" VALUE="Yes">Yes
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/361*@^/1" VALUE="Sometimes">Sometimes
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq4"></A>4.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">How can a client make hypnosis the most effective? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/362*@^/1" VALUE="Do everything your therapist says outside of hypnosis.">Do everything your therapist says outside of hypnosis.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/362*@^/1" VALUE="Listen to your reinforcement CD every day for at least 21 days.">Listen to your reinforcement CD every day for at least 21 days.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/362*@^/1" VALUE="Imagine everything your therapist tells you to imagine.">Imagine everything your therapist tells you to imagine.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/362*@^/1" VALUE="Accept every suggestion that your therapist gives you within hypnosis.">Accept every suggestion that your therapist gives you within hypnosis.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/362*@^/1" VALUE="All of the above.">All of the above.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq5"></A>5.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which is true? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/363*@^/1" VALUE="Hypnosis is something that a therapist does to you.">Hypnosis is something that a therapist does to you.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/363*@^/1" VALUE="Hypnosis is something you do with a therapist.">Hypnosis is something you do with a therapist.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq6"></A>6.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which is not a type of hypnosis? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/364*@^/1" VALUE="NLP (or neuro-linguistic programming)">NLP (or neuro-linguistic programming)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/364*@^/1" VALUE="Parts Therapy">Parts Therapy
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/364*@^/1" VALUE="Transactional Analysis">Transactional Analysis
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/364*@^/1" VALUE="Regression">Regression
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq7"></A>7.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Can everyone be hypnotized? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/365*@^/1" VALUE="No, hypnosis is only effective on people that are categorized as &quot;highly hypnotizable.&quot;">No, hypnosis is only effective on people that are categorized as "highly hypnotizable."
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/365*@^/1" VALUE="Yes, if you have normal brain functioning and are not on mind-altering drugs">Yes, if you have normal brain functioning and are not on mind-altering drugs
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/365*@^/1" VALUE="No, you must be somewhat gullible.">No, you must be somewhat gullible.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq8"></A>8.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Can a person's memory be erased with hypnosis? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/366*@^/1" VALUE="Yes.">Yes.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/366*@^/1" VALUE="No.  At least, not without their consent.">No.  At least, not without their consent.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq9"></A>9.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which of the issues below can not be treated with hypnotherapy? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Quitting smoking">Quitting smoking
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Losing weight">Losing weight
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Eliminating a phobia">Eliminating a phobia
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Irritable bowel syndrome">Irritable bowel syndrome
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Fibromyalgia">Fibromyalgia
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Stress">Stress
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Panic Attacks">Panic Attacks
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Memory improvement">Memory improvement
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Pain management">Pain management
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Healing faster from surgery">Healing faster from surgery
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="Remembering a forgotten memory">Remembering a forgotten memory
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/367*@^/1" VALUE="All of these things can be treated with hypnotherapy">All of these things can be treated with hypnotherapy
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq10"></A>10.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Will my therapist make me cluck like a chicken? (Value: 10 points)</P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/368*@^/1" VALUE="No, you cannot be made to do anything you don't want to">No, you cannot be made to do anything you don't want to
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/368*@^/1" VALUE="Yes.  We get bored easily.">Yes.  We get bored easily.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="31*@^/368*@^/1" VALUE="It depends on whether we are running low on eggs.">It depends on whether we are running low on eggs.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+  <INPUT TYPE="hidden" NAME="SGRQQNO" VALUE="1*@^/2*@^/3*@^/4*@^/5*@^/6*@^/7*@^/8*@^/9*@^/10">
+  <INPUT TYPE="hidden" NAME="SGRQQID" VALUE="359*@^/360*@^/361*@^/362*@^/363*@^/364*@^/365*@^/366*@^/367*@^/368">
+  <INPUT TYPE="hidden" NAME="SGRQQST" VALUE="True or False:  People under hypnosis are more likely to tell their secrets*@^/Do people remember what happens when in hypnosis?*@^/Can a hypnotist make someone do something against their morals or better judgement?*@^/How can a client make hypnosis the most effective?*@^/Which is true?*@^/Which is not a type of hypnosis?*@^/Can everyone be hypnotized?*@^/Can a person's memory be erased with hypnosis?*@^/Which of the issues below can not be treated with hypnotherapy?*@^/Will my therapist make me cluck like a chicken?">
+  <INPUT TYPE="hidden" NAME="SGRQQRA" VALUE="1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1">
+  <INPUT TYPE="hidden" NAME="SGRFRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRLRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRERQ" VALUE="T">
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P ALIGN="center">
+  <INPUT TYPE="submit" VALUE="Submit Your Responses">
+</P>
+
+</FORM>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P class="SGWatermark">Created with SurveyGold <a href="http://surveygold.com" style="text-decoration:none;"><font color="#000000">survey software</font></a> - ©2004 Golden Hills Software, Inc. - <A href="http://surveygold.com">http://surveygold.com</A></P>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,1086 @@
+<HTML>
+
+<HEAD>
+<TITLE>AHC_Program_Counselor_Test3</TITLE>
+<SCRIPT LANGUAGE="javascript">
+<!--
+function SGSelectAdjacentRadioButton ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the radio button adjacent to the text element by looping through all elements
+   //          in form looking for a radio button element that matches the name of the text element with a value
+   //          of "SGOTHR".
+	  //          If a radio button matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the radio button to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "radio") && (e.name == objElement.name) && (e.value == "SGOTHR")) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+	  }
+}
+
+
+function SGClearRadioButtonText ( objElement ) {
+
+   // Purpose: Clears the text value adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then its value is cleared.
+   // Accepts: objElement - a radio button element
+
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.value = "";
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnRadioButtonText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a radio button element
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.focus();
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnCheckBoxText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last checkbox by looping through all elements
+   //          in form looking for a text element that matches the name of the checkbox element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a checkbox element
+
+   if (objElement.type == "checkbox") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            if ( objElement.checked == true ) {
+               e.focus();
+            }
+            else {
+               e.value = ""
+            }
+         }
+      }
+   }
+}
+
+
+function SGSelectAdjacentCheckBox ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the checkbox adjacent to the text element by looping through all elements
+   //          in form looking for a checkbox element that matches the name of the text element.
+   //          If a checkbox matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the checkbox to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "checkbox") && (e.name == objElement.name)) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+   }
+}
+
+
+function SGEnforceUniqueRank( objElement ) {
+
+   // Purpose: Determines if the selected dropdownmenu response value is already selected in 
+   //          dropdownmenu value in the same question. If so, it clears the dropdown response
+   //          value of the other matching response. In this way, ranking question responses
+   //          are guaranteed to be unique.
+   // Accepts: objElement - a dropdownmenu element
+
+   if (objElement.type == "select-one") {
+      // Determine the survey ID and question ID.
+      // This is used to locate the form elements in the set of ranked responses.
+      var strSQID = SGParseSurveyIDQuestionID(objElement.name);
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         // Only examine other dropdownmenu elements.
+         if (e.type == "select-one") {
+            if (e.name != objElement.name ) {
+               var strSQIDCompare = SGParseSurveyIDQuestionID(e.name);
+               if (strSQID == strSQIDCompare ) {
+                  // If question numbers then look for a matching ranked response value to reset.
+                  if (e.value == objElement.value) {
+                     e.value = "";
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+
+function SGParseSurveyIDQuestionID( strElementName ) {
+
+   // Purpose: Returns the survey ID and question ID portion of the element name.
+   // Accepts: strElementName - a string containing a form element name in following format
+   //          SURVEYID*@^/QUESTIONID*@^/RANKORDER
+   // Example: 35*@^/558*@^/2 returns 35*@^/558
+
+   var strSurveyQuestion = "";
+
+   // Parse off survey and question ID from name
+   // Example: 35*@^/558
+
+   var intSlashPos = strElementName.indexOf("/");
+   if ( intSlashPos > 0 ) {
+      var intSplatPos = strElementName.indexOf("*",intSlashPos);
+      if ( intSplatPos > 0 ) {
+         strSurveyQuestion = strElementName.substring(0,intSplatPos);
+      }
+      else {
+         strSurveyQuestion = "";
+      }
+   }
+   else {
+      strSurveyQuestion = "";
+   }
+
+   return strSurveyQuestion;
+}
+
+-->
+</SCRIPT>
+</HEAD>
+
+<STYLE>
+<!--
+.SGHeader    { font-family: Arial; font-size: 24pt; color: #000080; font-weight: bold; text-align: Left }
+.SGInstructions { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left; margin-bottom: -12 }
+.SGSection   { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestion  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestionCenter{ font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Center}
+.SGResponse  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left; background-color: #FFFFFF }
+.SGResponseInstructions { font-family: Arial; font-size: 10pt; color: #000000; font-weight: bold; text-align: Left }
+.SGNormalText    { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }
+.SGWatermark  { font-family: Arial; font-size: 8pt; color: #000000; font-weight: normal; text-align: Left }
+.SGHorizontalLine { color: #808080 }
+-->
+</STYLE>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<H1 CLASS="SGHeader">AHC_Program_Counselor_Test3</H1>
+
+<P CLASS="SGInstructions">Instructions</P>
+<P CLASS="SGNormalText">Answer questions to the best of your ability. For most answers, check the boxes most applicable to you or fill in the blanks.</P>
+
+<FORM ACTION="http://surveygold.com/cgi-bin/appendresults.asp" METHOD="POST">
+
+<INPUT TYPE="hidden" NAME="DlmOption" VALUE="M">
+<INPUT TYPE="hidden" NAME="Survey" VALUE="AHC_Program_Counselor_Test3">
+<INPUT TYPE="hidden" NAME="SGEMT" VALUE="%l%a%r%r%y%TA%a%m%e%r%i%c%a%n%h%y%p%n%o%s%i%s%c%l%i%n%i%c%TD%c%o%m%">
+<INPUT TYPE="hidden" NAME="ID" VALUE="7B0F5347426645BF9D4C978357D31508">
+<INPUT TYPE="hidden" NAME="Notify" VALUE="T">
+<INPUT TYPE="hidden" NAME="ConfirmationURL" VALUE="http://americanhypnosisclinic.com/intranet/PC_testing_response.htm">
+<INPUT TYPE="hidden" NAME="SGBGCOLOR" VALUE="#FFFFFF">
+<INPUT TYPE="hidden" NAME="SGSTYLE" VALUE="<STYLE><!--.SGSection { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }.SGNormalText { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }.SGHorizontalLine { color: #808080 }--></STYLE>">
+<INPUT TYPE="hidden" NAME="SGMRQMSG" VALUE="Please fill in all required fields.">
+<INPUT TYPE="hidden" NAME="SID" VALUE="33">
+<INPUT TYPE="hidden" NAME="BBS" VALUE="F">
+
+<HR NOSHADE SIZE=10 WIDTH=100%>
+
+<H3 CLASS="SGSection">Please provide the following (*required)</H3>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+First Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRF" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Last Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRL" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Email*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRE" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">General Sales Strategy</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq1"></A>1.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Why is it important to get into a good state before you begin selling? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="Because if you are in a bad mood it shows in your voice and it will inhibit your ability to gain rapport.">Because if you are in a bad mood it shows in your voice and it will inhibit your ability to gain rapport.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="Because if you are grumpy or depressed then you will be less likely to notice buying signs or have the mental flexibility to see solutions quickly.">Because if you are grumpy or depressed then you will be less likely to notice buying signs or have the mental flexibility to see solutions quickly.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="Because what you say to yourself in the privacy of your own mind tends to be realized.">Because what you say to yourself in the privacy of your own mind tends to be realized.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="Because when you are in a good mood people can hear the smile in your voice and that makes you more compelling to be around.">Because when you are in a good mood people can hear the smile in your voice and that makes you more compelling to be around.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="Because when you are relaxed then you put people at ease naturally which engenders trust and therefore relationship-based sales.">Because when you are relaxed then you put people at ease naturally which engenders trust and therefore relationship-based sales.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/394*@^/1" VALUE="All of the above.">All of the above.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq2"></A>2.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which is the best way to get yourself into a great state to sell? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/396*@^/1" VALUE="Meditation.">Meditation.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/396*@^/1" VALUE="A nap.">A nap.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/396*@^/1" VALUE="A funny movie.">A funny movie.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/396*@^/1" VALUE="Self-hypnosis.">Self-hypnosis.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq3"></A>3.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is another good way to get into a good state to sell from? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Reminisce about past successes using all your senses.">Reminisce about past successes using all your senses.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Reminisce about joyful moments in your past and make sure you are visualizing it through your own eyes.">Reminisce about joyful moments in your past and make sure you are visualizing it through your own eyes.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Imagine vividly what it will be like when you have a day filled with terrific success.">Imagine vividly what it will be like when you have a day filled with terrific success.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Get up, move around dance and yell &quot;whoo hoo&quot; like you just won the lottery.">Get up, move around dance and yell "whoo hoo" like you just won the lottery.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Listen to testimonial interviews of past successful clients so you feel really good about helping people with our services.">Listen to testimonial interviews of past successful clients so you feel really good about helping people with our services.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="Listen to great music while you do any of the above or simply imagine hearing that great soundtrack in your mind.">Listen to great music while you do any of the above or simply imagine hearing that great soundtrack in your mind.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/397*@^/1" VALUE="All of the above">All of the above
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq4"></A>4.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is a great way to establish rapport while on the phone that was discussed during the training? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/398*@^/1" VALUE="Compliment a person.">Compliment a person.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/398*@^/1" VALUE="Match vocal tone, speed and volume.">Match vocal tone, speed and volume.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/398*@^/1" VALUE="Talk about things you have in common.">Talk about things you have in common.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/398*@^/1" VALUE="Agree with anything a person says.">Agree with anything a person says.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq5"></A>5.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is the single most important tool you have as a salesperson to both build rapport and empower yourself to make the sale? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/399*@^/1" VALUE="Asking questions.">Asking questions.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/399*@^/1" VALUE="Telling personal stories.">Telling personal stories.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/399*@^/1" VALUE="Quoting statistics.">Quoting statistics.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/399*@^/1" VALUE="Creating a &quot;yes&quot; set.">Creating a "yes" set.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq6"></A>6.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">How do you determine a client's "hot buttons" for buying? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/400*@^/1" VALUE="They are listed in the program descriptions for each program (smoking, etc.).">They are listed in the program descriptions for each program (smoking, etc.).
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/400*@^/1" VALUE="Asking questions.">Asking questions.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/400*@^/1" VALUE="Telling personal stories.">Telling personal stories.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/400*@^/1" VALUE="Telling stories about past clients.">Telling stories about past clients.
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq7"></A>7.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which benefits are most important to emphasize to a smoker? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/401*@^/1" VALUE="The health benefits of quitting.">The health benefits of quitting.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/401*@^/1" VALUE="The fact that the program pays for itself.">The fact that the program pays for itself.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/401*@^/1" VALUE="The ease with which you can quit.">The ease with which you can quit.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/401*@^/1" VALUE="The lifetime guarantee.">The lifetime guarantee.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/401*@^/1" VALUE="The benefits that match his &quot;hot buttons.&quot;">The benefits that match his "hot buttons."
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq8"></A>8.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which benefit/benefits are most important to emphasize to a person who wants to lose weight? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/402*@^/1" VALUE="The fact that hypnosis tends to be permanent.">The fact that hypnosis tends to be permanent.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/402*@^/1" VALUE="The fact that hypnosis deals with a person's subconscious causes and not just the symptoms.">The fact that hypnosis deals with a person's subconscious causes and not just the symptoms.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/402*@^/1" VALUE="The fact that hypnosis can help make change much easier.">The fact that hypnosis can help make change much easier.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/402*@^/1" VALUE="The benefits that match her &quot;hot buttons.&quot;">The benefits that match her "hot buttons."
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq9"></A>9.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">When do you answer the question "how much is it?" </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/403*@^/1" VALUE="As soon as the client asks.">As soon as the client asks.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/403*@^/1" VALUE="After you have the chance to ask questions of the client, match his needs to our services and create desire and urgency.">After you have the chance to ask questions of the client, match his needs to our services and create desire and urgency.
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="33*@^/403*@^/1" VALUE="Never">Never
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq10"></A>10.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is a good answer when a client immediately "how much is it?" before you have met your goals? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/404*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Answering Objections</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq11"></A>11.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write an answer that you are comfortable with to the objection "three weeks... but I can't wait that long for an appointment!" </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/405*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq12"></A>12.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write an answer that you are comfortable with for "it's too much money" in the instance that we are talking about a smoking program. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/406*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq13"></A>13.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write an answer that you are comfortable with for "it's too much money" in the instance that we are talking about a weight loss program. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/407*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq14"></A>14.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write an answer that you are comfortable with for "I can't afford it" in the instance that we are talking about a smoking program.  (Notice the difference between too much money vs. I can't afford it) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/408*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq15"></A>15.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write an answer that you are comfortable with when a client asks for a deal. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/409*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq16"></A>16.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">This is an important one:  What is a phrase you can use to find a hidden objection? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/410*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq17"></A>17.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is a good answering machine message to leave? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/411*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Closings</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq18"></A>18.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What is a great phrase to use in order to ask their "rules" for closing? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/412*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq19"></A>19.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Which is the best close to try first? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/413*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq20"></A>20.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Write out a relevant story that you believe you can use to close a sale. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="4" COLS="80" NAME="33*@^/414*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+  <INPUT TYPE="hidden" NAME="SGRQQNO" VALUE="1*@^/2*@^/3*@^/4*@^/5*@^/6*@^/7*@^/8*@^/9*@^/10*@^/11*@^/12*@^/13*@^/14*@^/15*@^/16*@^/17*@^/18*@^/19*@^/20">
+  <INPUT TYPE="hidden" NAME="SGRQQID" VALUE="394*@^/396*@^/397*@^/398*@^/399*@^/400*@^/401*@^/402*@^/403*@^/404*@^/405*@^/406*@^/407*@^/408*@^/409*@^/410*@^/411*@^/412*@^/413*@^/414">
+  <INPUT TYPE="hidden" NAME="SGRQQST" VALUE="Why is it important to get into a good state before you begin selling?*@^/Which is the best way to get yourself into a great state to sell?*@^/What is another good way to get into a good state to sell from?*@^/What is a great way to establish rapport while on the phone that was discussed during the training?*@^/What is the single most important tool you have as a salesperson to both build rapport and empower yourself to make the sale?*@^/How do you determine a client's ''hot buttons'' for buying?*@^/Which benefits are most important to emphasize to a smoker?*@^/Which benefit/benefits are most important to emphasize to a person who wants to lose weight?*@^/When do you answer the question ''how much is it?''*@^/What is a good answer when a client immediately ''how much is it?'' before you have met your goals?*@^/Please write an answer that you are comfortable with to the objection ''three weeks... but I can't wait that long for an appointment!''*@^/Please write an answer that you are comfortable with for ''it's too much money'' in the instance that we are talking about a smoking program.*@^/Please write an answer that you are comfortable with for ''it's too much money'' in the instance that we are talking about a weight loss program.*@^/Please write an answer that you are comfortable with for ''I can't afford it'' in the instance that we are talking about a smoking program.  (Notice the difference between too much money vs. I can't afford it)*@^/Please write an answer that you are comfortable with when a client asks for a deal.*@^/This is an important one:  What is a phrase you can use to find a hidden objection?*@^/What is a good answering machine message to leave?*@^/What is a great phrase to use in order to ask their ''rules'' for closing?*@^/Which is the best close to try first?*@^/Write out a relevant story that you believe you can use to close a sale.">
+  <INPUT TYPE="hidden" NAME="SGRQQRA" VALUE="1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1*@^/1">
+  <INPUT TYPE="hidden" NAME="SGRFRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRLRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRERQ" VALUE="T">
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P ALIGN="center">
+  <INPUT TYPE="submit" VALUE="Submit Your Responses">
+</P>
+
+</FORM>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P class="SGWatermark">Created with SurveyGold <a href="http://surveygold.com" style="text-decoration:none;"><font color="#000000">survey software</font></a> - ©2004 Golden Hills Software, Inc. - <A href="http://surveygold.com">http://surveygold.com</A></P>
+
+</BODY>
+
+</HTML>

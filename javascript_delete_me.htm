@@ -1,0 +1,32 @@
+<html>
+<head>
+
+<script type="text/javascript"><!-- //HIDE FROM OLD BROWSERS
+
+
+function verifyDelete(){
+  
+  yesNo = window.confirm('Are You Sure?');
+  
+
+  // if they say "no"
+  if (!yesNo){
+    
+    window.location.href="affiliates_menu.php"; //IF NO GO BACK TO MAIN MENU
+
+	}else{
+	  return;
+	  }//end of if/else confirmed block
+	
+	
+}//end of function definition
+
+//END HIDING-->
+</script>
+</head>
+<body>
+
+<a href = "do_delaffiliate.php" onClick="verifyDelete();">AHC Link</a>
+
+</body>
+</html>

@@ -1,0 +1,1500 @@
+<HTML>
+
+<HEAD>
+<TITLE>Application to Become an American Hypnosis Clinic Affiliate</TITLE>
+<SCRIPT LANGUAGE="javascript">
+<!--
+function SGSelectAdjacentRadioButton ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the radio button adjacent to the text element by looping through all elements
+   //          in form looking for a radio button element that matches the name of the text element with a value
+   //          of "SGOTHR".
+	  //          If a radio button matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the radio button to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "radio") && (e.name == objElement.name) && (e.value == "SGOTHR")) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+	  }
+}
+
+
+function SGClearRadioButtonText ( objElement ) {
+
+   // Purpose: Clears the text value adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then its value is cleared.
+   // Accepts: objElement - a radio button element
+
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.value = "";
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnRadioButtonText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last radio button by looping through all elements
+   //          in form looking for a text element that matches the name of the radio button element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a radio button element
+   if (objElement.type == "radio") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            e.focus();
+         }
+      }
+   }
+}
+
+
+function SGSetFocusOnCheckBoxText ( objElement ) {
+
+   // Purpose: Sets focus in the text element adjacent to the last checkbox by looping through all elements
+   //          in form looking for a text element that matches the name of the checkbox element passed in.
+   //          If a text element matching this description is found, then focus is set to it.
+   // Accepts: objElement - a checkbox element
+
+   if (objElement.type == "checkbox") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "text") && (e.name == objElement.name)) {
+            if ( objElement.checked == true ) {
+               e.focus();
+            }
+            else {
+               e.value = ""
+            }
+         }
+      }
+   }
+}
+
+
+function SGSelectAdjacentCheckBox ( objElement, blnCheckForValue ) {
+
+   // Purpose: Selects the checkbox adjacent to the text element by looping through all elements
+   //          in form looking for a checkbox element that matches the name of the text element.
+   //          If a checkbox matching this description is found, then it selected only if the 
+   //          objElement value is not "".
+   // Accepts: objElement - a text element
+   //          blnCheckForValue - a boolean when true only sets the checkbox to checked if
+   //                             the objElement has a value
+
+   if (objElement.type == "text") {
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         if ((e.type == "checkbox") && (e.name == objElement.name)) {
+            if ( blnCheckForValue == true ) {
+               e.checked = ( objElement.value != "");
+            }
+            else {
+               e.checked = true;
+            }
+         }
+      }
+   }
+}
+
+
+function SGEnforceUniqueRank( objElement ) {
+
+   // Purpose: Determines if the selected dropdownmenu response value is already selected in 
+   //          dropdownmenu value in the same question. If so, it clears the dropdown response
+   //          value of the other matching response. In this way, ranking question responses
+   //          are guaranteed to be unique.
+   // Accepts: objElement - a dropdownmenu element
+
+   if (objElement.type == "select-one") {
+      // Determine the survey ID and question ID.
+      // This is used to locate the form elements in the set of ranked responses.
+      var strSQID = SGParseSurveyIDQuestionID(objElement.name);
+      for (intCount = 0; intCount < objElement.form.length; intCount++) {
+         var e = objElement.form.elements[intCount];
+         // Only examine other dropdownmenu elements.
+         if (e.type == "select-one") {
+            if (e.name != objElement.name ) {
+               var strSQIDCompare = SGParseSurveyIDQuestionID(e.name);
+               if (strSQID == strSQIDCompare ) {
+                  // If question numbers then look for a matching ranked response value to reset.
+                  if (e.value == objElement.value) {
+                     e.value = "";
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+
+function SGParseSurveyIDQuestionID( strElementName ) {
+
+   // Purpose: Returns the survey ID and question ID portion of the element name.
+   // Accepts: strElementName - a string containing a form element name in following format
+   //          SURVEYID*@^/QUESTIONID*@^/RANKORDER
+   // Example: 35*@^/558*@^/2 returns 35*@^/558
+
+   var strSurveyQuestion = "";
+
+   // Parse off survey and question ID from name
+   // Example: 35*@^/558
+
+   var intSlashPos = strElementName.indexOf("/");
+   if ( intSlashPos > 0 ) {
+      var intSplatPos = strElementName.indexOf("*",intSlashPos);
+      if ( intSplatPos > 0 ) {
+         strSurveyQuestion = strElementName.substring(0,intSplatPos);
+      }
+      else {
+         strSurveyQuestion = "";
+      }
+   }
+   else {
+      strSurveyQuestion = "";
+   }
+
+   return strSurveyQuestion;
+}
+
+-->
+</SCRIPT>
+<!--mstheme--><link rel="stylesheet" type="text/css" href="_themes/breeze/bree1011.css"><meta name="Microsoft Theme" content="breeze 1011, default">
+</HEAD>
+
+<STYLE>
+<!--
+.SGHeader    { font-family: Arial; font-size: 24pt; color: #000080; font-weight: bold; text-align: Left }
+.SGInstructions { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left; margin-bottom: -12 }
+.SGSection   { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestion  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Left }
+.SGQuestionCenter{ font-family: Arial; font-size: 12pt; color: #000000; font-weight: bold; text-align: Center}
+.SGResponse  { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left; background-color: #FFFFFF }
+.SGResponseInstructions { font-family: Arial; font-size: 10pt; color: #000000; font-weight: bold; text-align: Left }
+.SGNormalText    { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }
+.SGWatermark  { font-family: Arial; font-size: 8pt; color: #000000; font-weight: normal; text-align: Left }
+.SGHorizontalLine { color: #808080 }
+-->
+</STYLE>
+
+<BODY>
+
+<H1 CLASS="SGHeader">Application to Become an American Hypnosis Clinic Affiliate</H1>
+
+<P CLASS="SGInstructions">Instructions</P>
+<P CLASS="SGNormalText">We are pleased to know that you are interested in becoming an American Hypnosis Clinic Affiliate.  If you are chosen, then we will include you in our national marketing plan and will sell programs to clients based on your ability to provide treatment for them.  This leaves you open to do the therapy you love instead of sales.  We also provide you with patients you would not have otherwise been introduced to.<BR><BR>Applicants will be reviewed by the American Hypnosis Clinic Board of Directors and our choices of who we will work with will be based upon credentials, experience and expressed philosophy.  <BR><BR>We will choose a limited number of therapists in each area.  If you qualify but are not chosen, we will keep your information on a list in case an opportunity opens up at a later date.<BR><BR>Please fill out one application for each therapist in your practice.  <BR><BR>If you are approved as an AHC affiliate we will offer you our terms & conditions contract for your review.  You may choose to withdraw from membership at any time for any reason and we reserve the right to terminate your affiliation at any time as well.  As an affiliate you will benefit from our marketing, patients referred directly to you, opportunities to grow your business through shared advertising/promotional materials, classes, products and a community of like-minded professionals working together to elevate the art and science of hypnotherapy.<BR><BR>Good luck, and hopefully we will be working together to help those in need on a regular basis.<BR><BR>(*Note:  If you experience any technical problems submitting this form online, please feel free to print it out and fax it to us at 804-594-1971)</P>
+
+<FORM ACTION="http://surveygold.com/cgi-bin/appendresults.asp" METHOD="POST">
+
+<INPUT TYPE="hidden" NAME="DlmOption" VALUE="M">
+<INPUT TYPE="hidden" NAME="Survey" VALUE="Application to Become an American Hypnosis Clinic Affiliate">
+<INPUT TYPE="hidden" NAME="SGEMT" VALUE="%l%a%r%r%y%TA%a%m%e%r%i%c%a%n%h%y%p%n%o%s%i%s%c%l%i%n%i%c%TD%c%o%m%">
+<INPUT TYPE="hidden" NAME="ID" VALUE="7B0F5347426645BF9D4C978357D31508">
+<INPUT TYPE="hidden" NAME="Notify" VALUE="T">
+<INPUT TYPE="hidden" NAME="ConfirmationURL" VALUE="http://americanhypnosisclinic.com/Affiliate Terms and Conditions.HTM">
+<INPUT TYPE="hidden" NAME="SGBGCOLOR" VALUE="#FFFFFF">
+<INPUT TYPE="hidden" NAME="SGSTYLE" VALUE="<STYLE><!--.SGSection { font-family: Arial; font-size: 14pt; color: #000000; font-weight: bold; text-align: Left }.SGNormalText { font-family: Arial; font-size: 12pt; color: #000000; font-weight: normal; text-align: Left }.SGHorizontalLine { color: #808080 }--></STYLE>">
+<INPUT TYPE="hidden" NAME="SGMRQMSG" VALUE="Please fill in all required fields.">
+<INPUT TYPE="hidden" NAME="SID" VALUE="26">
+<INPUT TYPE="hidden" NAME="BBS" VALUE="F">
+
+<HR NOSHADE SIZE=10 WIDTH=100%>
+
+<H3 CLASS="SGSection">Please provide the following (*required)</H3>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+First Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRF" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Last Name*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRL" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Title*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRT" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Name of Practice*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRO" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Address*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRA" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+City*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRC" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+State*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRS" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Zip Code*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRZ" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Phone*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRP" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Fax*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRX" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Email*</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGRE" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Alternate/Emergency Phone</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGR1" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<INPUT TYPE="hidden" NAME="SGRNM1" value="User-Defined 1">
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <STRONG> </STRONG>
+    </TD>
+    <TD WIDTH="94%">
+      <TABLE BORDER="0" WIDTH="99%">
+        <TR>
+          <TD WIDTH="28%">
+            <P ALIGN="right" CLASS="SGQuestion">
+Web Site</P>
+          </TD>
+          <TD WIDTH="83%">
+            <INPUT TYPE="text" NAME="SGR2" SIZE="42" CLASS="SGResponse">
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>
+<INPUT TYPE="hidden" NAME="SGRNM2" value="User-Defined 2">
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Therapist Certifications</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq1"></A>1.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Certifications (check all that apply) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/1" VALUE="CH/CHt">CH/CHt
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/2" VALUE="MHt">MHt
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/3" VALUE="Hypnosis Trainer Certification">Hypnosis Trainer Certification
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/4" VALUE="NLP Practitioner">NLP Practitioner
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/5" VALUE="NLP Masters">NLP Masters
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/334*@^/6" VALUE="NLP Trainer">NLP Trainer
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq2"></A>2.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Issues that you have special certification in or experience working with. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/1" VALUE="Smoking">Smoking
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/2" VALUE="Weight Loss">Weight Loss
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/3" VALUE="Anorexia/Bulimia">Anorexia/Bulimia
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/4" VALUE="Stress/Anxiety">Stress/Anxiety
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/5" VALUE="Drug/Alcohol addiction">Drug/Alcohol addiction
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/6" VALUE="Pain Management">Pain Management
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/7" VALUE="Phobias">Phobias
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/8" VALUE="OCD">OCD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/9" VALUE="Self-esteem">Self-esteem
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/10" VALUE="Depression">Depression
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/11" VALUE="ADD/ADHD">ADD/ADHD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/12" VALUE="Reduced Pain in Childbirth">Reduced Pain in Childbirth
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/13" VALUE="Irritable Bowel syndrome">Irritable Bowel syndrome
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/14" VALUE="Fibromyalgia">Fibromyalgia
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/15" VALUE="Hypertension">Hypertension
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/16" VALUE="Sports Attainment">Sports Attainment
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/335*@^/17" VALUE="SGOTHR" ONCLICK="SGSetFocusOnCheckBoxText(this);">Other:<INPUT TYPE="text" NAME="26*@^/335*@^/17" SIZE="30" ONCHANGE="SGSelectAdjacentCheckBox(this,true);" ONFOCUS="SGSelectAdjacentCheckBox(this,false);">
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Education</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq3"></A>3.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please check any degrees/licenses that you have earned. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/1" VALUE="ACH">ACH
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/2" VALUE="AA">AA
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/3" VALUE="AS">AS
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/4" VALUE="BCH">BCH
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/5" VALUE="BA">BA
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/6" VALUE="BS">BS
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/7" VALUE="MA">MA
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/8" VALUE="MS">MS
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/9" VALUE="MSW">MSW
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/10" VALUE="LCSW">LCSW
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/11" VALUE="LPC">LPC
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/12" VALUE="DCH">DCH
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/13" VALUE="PhD">PhD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/14" VALUE="PsyD">PsyD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/15" VALUE="EdD">EdD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/16" VALUE="OD">OD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/17" VALUE="MD">MD
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/336*@^/18" VALUE="SGOTHR" ONCLICK="SGSetFocusOnCheckBoxText(this);">Details:<INPUT TYPE="text" NAME="26*@^/336*@^/18" SIZE="30" ONCHANGE="SGSelectAdjacentCheckBox(this,true);" ONFOCUS="SGSelectAdjacentCheckBox(this,false);">
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Experience</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq4"></A>4.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">How Many years have you been practicing hypnotherapy? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <INPUT TYPE="text" NAME="26*@^/337*@^/1" SIZE="4" CLASS="SGResponse">
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq5"></A>5.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please describe you work history in the field.  (One or two paragraphs only) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="12" COLS="80" NAME="26*@^/338*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Philosophy, Style & Affiliations</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq6"></A>6.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please check off the styles and techniques of hypnotherapy you are comfortable using. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/1" VALUE="Ericksonian Hypnosis (Indirect, trance ratifications, metaphor, etc.)	">Ericksonian Hypnosis (Indirect, trance ratifications, metaphor, etc.)	
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/2" VALUE="Elman-style Hypnosis (rapid induction techniques, using ratification as a deepener & direct suggestion)	">Elman-style Hypnosis (rapid induction techniques, using ratification as a deepener & direct suggestion)	
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/3" VALUE="Autogenic-style Hypnosis (progressive relaxation/imagery & direct suggestion)">Autogenic-style Hypnosis (progressive relaxation/imagery & direct suggestion)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/4" VALUE="NLP (linguistic patterns, conscious exercises, phobia cure, swish, etc.)">NLP (linguistic patterns, conscious exercises, phobia cure, swish, etc.)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/5" VALUE="Regression">Regression
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/6" VALUE="Parts Therapy (Ego State Therapy, Core Transformation, six-step reframing, etc.)">Parts Therapy (Ego State Therapy, Core Transformation, six-step reframing, etc.)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/7" VALUE="Cognitive Behavioral Psychology">Cognitive Behavioral Psychology
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/8" VALUE="Rational Emotive Therapy">Rational Emotive Therapy
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/9" VALUE="Reality Therapy">Reality Therapy
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/10" VALUE="Biofeedback (GSR)">Biofeedback (GSR)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/11" VALUE="Biofeedback (EEG)">Biofeedback (EEG)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/339*@^/12" VALUE="SGOTHR" ONCLICK="SGSetFocusOnCheckBoxText(this);">Other:<INPUT TYPE="text" NAME="26*@^/339*@^/12" SIZE="30" ONCHANGE="SGSelectAdjacentCheckBox(this,true);" ONFOCUS="SGSelectAdjacentCheckBox(this,false);">
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq7"></A>7.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please list organizations you are a member of. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/1" VALUE="National Guild of Hypnotists">National Guild of Hypnotists
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/2" VALUE="American Society of Clinical Hypnosis">American Society of Clinical Hypnosis
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/3" VALUE="American Council of Hypnotist Examiners">American Council of Hypnotist Examiners
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/4" VALUE="International Medical and Dental Hypnotherapy Association">International Medical and Dental Hypnotherapy Association
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/5" VALUE="National League of Medical Hypnotherapists">National League of Medical Hypnotherapists
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/6" VALUE="American Institute of Hypnosis">American Institute of Hypnosis
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/7" VALUE="National Association of Transpersonal Hypnotherapists">National Association of Transpersonal Hypnotherapists
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/8" VALUE="National Federation of Neurolinguistic Programming">National Federation of Neurolinguistic Programming
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/9" VALUE="American Medical Association">American Medical Association
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/10" VALUE="American Psychological Associations">American Psychological Associations
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/11" VALUE="National Association of Social Workers">National Association of Social Workers
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/12" VALUE="Better Business Bureau">Better Business Bureau
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/340*@^/13" VALUE="SGOTHR" ONCLICK="SGSetFocusOnCheckBoxText(this);">Other:<INPUT TYPE="text" NAME="26*@^/340*@^/13" SIZE="30" ONCHANGE="SGSelectAdjacentCheckBox(this,true);" ONFOCUS="SGSelectAdjacentCheckBox(this,false);">
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq8"></A>8.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please describe your philosophy and style regarding the practice of hypnotherapy.  (One or two paragraphs only) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="12" COLS="80" NAME="26*@^/341*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<H3 CLASS="SGSection">Working Together</H3>
+
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq9"></A>9.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please write a one-two paragraph description of your qualifications that we can use on our web site if you are approved.  (One or two paragraphs only) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="12" COLS="80" NAME="26*@^/342*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq10"></A>10.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Do you have a receptionist?  (Executive suite/shared receptionists are fine) </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="26*@^/346*@^/1" VALUE="yes">yes
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="radio" NAME="26*@^/346*@^/1" VALUE="no">no
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq11"></A>11.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">In what kind of facility is your clinic located? </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGResponseInstructions">(Select all that apply.)</P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/345*@^/1" VALUE="A home">A home
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/345*@^/2" VALUE="A single-business office">A single-business office
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/345*@^/3" VALUE="A multi-business office building">A multi-business office building
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/345*@^/4" VALUE="In partnership with another health-related practice (chiropractor, wellness clinic, etc.)">In partnership with another health-related practice (chiropractor, wellness clinic, etc.)
+      </P>
+    </TD>
+  </TR>
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGNormalText">
+        <INPUT TYPE="checkbox" NAME="26*@^/345*@^/5" VALUE="SGOTHR" ONCLICK="SGSetFocusOnCheckBoxText(this);">Please describe:<INPUT TYPE="text" NAME="26*@^/345*@^/5" SIZE="30" ONCHANGE="SGSelectAdjacentCheckBox(this,true);" ONFOCUS="SGSelectAdjacentCheckBox(this,false);">
+      </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq12"></A>12.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">What nearby geographic areas do your patients normally come from in order to see you (for our marketing purposes).  Please be as thorough as possible so we can better serve you. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="7" COLS="80" NAME="26*@^/343*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%" BGCOLOR="#C0C0C0">
+  <TR>
+    <TD WIDTH="6%">
+      <P CLASS="SGQuestion"><A NAME="skiptoq13"></A>13.</P>
+    </TD>
+    <TD WIDTH="94%">
+      <P CLASS="SGQuestion">Please give us directions to your clinic from the major highways coming from different directions. </P>
+    </TD>
+  </TR>
+</TABLE>
+
+<TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD WIDTH="6%">
+    </TD>
+    <TD WIDTH="94%">
+      <TEXTAREA ROWS="7" COLS="80" NAME="26*@^/344*@^/1" CLASS="SGResponse"></TEXTAREA>
+    </TD>
+  </TR>
+</TABLE>
+
+  <INPUT TYPE="hidden" NAME="SGRQQNO" VALUE="1*@^/2*@^/3*@^/4*@^/5*@^/6*@^/7*@^/8*@^/9*@^/10*@^/11*@^/12*@^/13">
+  <INPUT TYPE="hidden" NAME="SGRQQID" VALUE="334*@^/335*@^/336*@^/337*@^/338*@^/339*@^/340*@^/341*@^/342*@^/346*@^/345*@^/343*@^/344">
+  <INPUT TYPE="hidden" NAME="SGRQQST" VALUE="Certifications (check all that apply)*@^/Issues that you have special certification in or experience working with.*@^/Please check any degrees/licenses that you have earned.*@^/How Many years have you been practicing hypnotherapy?*@^/Please describe you work history in the field.  (One or two paragraphs only)*@^/Please check off the styles and techniques of hypnotherapy you are comfortable using.*@^/Please list organizations you are a member of.*@^/Please describe your philosophy and style regarding the practice of hypnotherapy.  (One or two paragraphs only)*@^/Please write a one-two paragraph description of your qualifications that we can use on our web site if you are approved.  (One or two paragraphs only)*@^/Do you have a receptionist?  (Executive suite/shared receptionists are fine)*@^/In what kind of facility is your clinic located?*@^/What nearby geographic areas do your patients normally come from in order to see you (for our marketing purposes).  Please be as thorough as possible so we can better serve you.*@^/Please give us directions to your clinic from the major highways coming from different directions.">
+  <INPUT TYPE="hidden" NAME="SGRQQRA" VALUE="0*@^/0*@^/0*@^/1*@^/1*@^/0*@^/0*@^/1*@^/1*@^/1*@^/0*@^/1*@^/1">
+  <INPUT TYPE="hidden" NAME="SGRFRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRLRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRTRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRORQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRARQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRCRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRSRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRZRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRPRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRXRQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGRERQ" VALUE="T">
+  <INPUT TYPE="hidden" NAME="SGR1RQ" VALUE="F">
+  <INPUT TYPE="hidden" NAME="SGR2RQ" VALUE="F">
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P ALIGN="center">
+  <INPUT TYPE="submit" VALUE="Submit Your Responses">
+</P>
+
+</FORM>
+
+<HR NOSHADE SIZE=10 WIDTH=100% CLASS=SGHorizontalLine>
+
+<P class="SGWatermark">Created with SurveyGold <a href="http://surveygold.com" style="text-decoration:none;"><font color="#000000">survey software</font></a> - ©2004 Golden Hills Software, Inc. - <A href="http://surveygold.com">http://surveygold.com</A></P>
+
+</BODY>
+
+</HTML>

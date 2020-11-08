@@ -1,0 +1,39 @@
+[Options]
+Highlight=0
+SaveSession=1
+DialogFont=Tahoma
+ExternPath=http://www.americanhypnosisclinic.com/intranet
+LocalPath=C:\Documents and Settings\Larry Volz\My Documents\My Web Sites\AHC Intranet\
+LocalPort=8080
+FTPcfname=55
+FTPPassive=0
+FTPHost=
+FTPPort=
+FTPUser=
+FTPServerPath=
+FindText=
+ReplaceText=
+BrowserPath=InternetExplorer
+Font=Courier New
+Parameters=-q
+InternBrowser=Internet Explorer
+[Registry]
+css=0
+html=0
+js=0
+sql=0
+php=0
+multi=0
+[UPDATE]
+Version=
+Download=
+Description=
+[Edit]
+Edge=80
+[History]
+Last=2
+1=C:\Documents and Settings\Larry Volz\My Documents\My Web Sites\AHC Intranet\Dbase Admin\my_contacts\show_mc_modcontact.php
+2=C:\Documents and Settings\Larry Volz\My Documents\My Web Sites\AHC Intranet\Dbase Admin\my_contacts\show_mc_addcontact.php
+[Session]
+Last=0
+Active=-1
