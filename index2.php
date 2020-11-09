@@ -24,7 +24,7 @@ IF ($auth !="ok"){
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>AHC Intranet</title>
+<title>AHA CRM</title>
 <!-- <meta name="Microsoft Border" content="r, default"> --><!-- SHARED BORDER -->
 </head>
 	<frameset framespacing="1" border="1" frameborder="1" rows="111,*">

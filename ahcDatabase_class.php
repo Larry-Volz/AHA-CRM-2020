@@ -114,12 +114,17 @@
 
     $db_name = "america2_AHC";
 
+        $servername = "mysql.americanhypnotherapyassociation.com";
+            $username = "larryvolz";
+            $password = "ZacNat727";
+            $dbname = "america2_ahc";
+
 
 
         //open the SQL connection to AHC server databases
 
         //$connection = mysql_connect("localhost","america2_AHC","magiclar");// or die (mysql_error())
-        $connection = mysql_connect("localhost", "america2_AHC", "magiclar");
+        $connection = mysql_connect($servername, $username, $password);
 
 
 
