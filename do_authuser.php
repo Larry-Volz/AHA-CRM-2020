@@ -18,19 +18,22 @@ Well at least the page loaded
 // //  session_start();
 // // // Check and make sure entries made for both
 
+try {
 
+    if ((!$_POST["username"]) || (!$_POST["password"])){
 
-if ((!$_POST[username]) || (!$_POST[password])){
+        //header( "Location: index.htm");
+    //or security - to avoid page caching
+    header( "Location: re-login_page.html");
 
-       //header( "Location: index.htm");
-//or security - to avoid page caching
-header( "Location: re-login_page.html");
+    echo "NO FORM INPUT!!!";
 
-echo "NO FORM INPUT!!!";
+        exit;
 
-    exit;
-
-}  //end entry-check IF block
+    }  //end entry-check IF block
+} catch (Exception $e) {
+    $ignore = $e;
+}
 
 // //testing
 // //echo "$_POST[username] - $_POST[password] ";
@@ -39,7 +42,7 @@ echo "NO FORM INPUT!!!";
 
 ################################# CONNECT #################################################
 
-include_once("ahcDatabase_class.php");
+//include_once("ahcDatabase_class.php");
 
 
 
@@ -51,9 +54,16 @@ $table_name = "auth_users";
 
 
 //$ahcDB->dbConnect();
-$servername = "mysql.americanhypnotherapyassociation.com";
-$username = "larryvolz";
-$password = "ZacNat727";
+//SETTINGS FOR DREAMHOST DEPLOYMENT - UNNEEDED FOR LOCAL XAMPP DEVELOPMENT
+
+// $servername = 'mysql.americanhypnotherapyassociation.com';
+// $username = "larryvolz";
+// $password = "ZacNat727";
+// $dbname = "america2_ahc";
+
+$servername = 'localhost';
+$username = "root";
+$password = "";
 $dbname = "america2_ahc";
 
 
@@ -93,9 +103,7 @@ if (!$db){
 echo ("username = $_POST[username] <br>");
 echo ("password = $_POST[password]<br>");
 
-// $sql = "SELECT * FROM $table_name WHERE username = '$_POST[username]' AND password = OLD_PASSWORD('$_POST[password]')";
-
-$sql = "SELECT * FROM $table_name";
+ $sql = "SELECT * FROM $table_name WHERE username = '$_POST[username]' AND password = '$_POST[password]'";
 
 
 
@@ -111,7 +119,7 @@ if (!$result){
 
 $num = mysqli_num_rows($result);
 
-echo "number of records found matching = $num";
+// echo "number of records found matching = $num";
 
 
 echo "<p style = 'color: red'>Made it here!</p>";
@@ -126,7 +134,7 @@ echo "<p style = 'color: red'>Made it here!</p>";
 
 // //################### New ######## QUERY 2 Get LEVEL of permission granted ######################
 
-// // $query2="SELECT * from $table_name WHERE username = '$_POST[username]' AND password = password('$_POST[password]')";
+// $query2="SELECT * from $table_name WHERE username = '$_POST[username]' AND password = password('$_POST[password]')";
 
 
 
@@ -134,17 +142,17 @@ echo "<p style = 'color: red'>Made it here!</p>";
 
 
 
-// //permissions array
+// // //permissions array
 
-// // $perm_array=mysql_fetch_array($result2);
+// $perm_array=mysqli_fetch_array($result);
 
 
 
-// //get level of permission
+// // //get level of permission
 
-// // $permission=$perm_array[member_type];
+// $permission=$perm_array[member_type];
 
-// //echo "P up: ".$permission;
+// echo "P up: ".$permission;
 
 
 

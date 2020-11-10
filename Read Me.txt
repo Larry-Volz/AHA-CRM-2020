@@ -1,0 +1,8 @@
+Notes on re-build:
+This project is to re-build and re-factor an old intranet/CRM that I made years ago for a company I owned called The American Hypnosis Clinic.
+I want to re-purpose the code to use in a new organization for hypnotherapists.  Especially the sales management algorithms which
+were great for keeping my sales staff on task  remembering who to call and when. I also would like to be able to use it as a 
+portfolio project for one of my capstone projects for SpringBoard.
+
+11/8/2020 - I was able to connect file do_authusers.php to beginnings of re-created database america2_ahc  and first table auth_users. 
+Was able to return data and made my first commit.
