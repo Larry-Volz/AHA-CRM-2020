@@ -1,0 +1,11 @@
+<?
+$welcomeAffiliateMessage = "Dear $f_name,<br><br>Congratulations.  Your qualifications and experience meet our established guidelines and therefore you have been accepted as an American Hypnosis Clinic affiliate.<br><br>
+I will personally go over you application at a later time and verify your ranking in our system, but you have already been immediately added to our database and your information has been send to our appointment setting department.<br><br>
+This means that our program counselors will recieve e-mails informing them of your membership and they will familiarize themselves with your qualifications.  So, when potential clients call from your area you will be considered as a therapist to recommend.  Our PC's choose the therapist to suggest to a client based on their rating (which reflects their experience and education) as well as the styles of hypnosis they use, the issues they treat and of course client preference (sex of the therapist, etc.).  <br><br>
+As new affiliate therapists work with our clients more, we learn more about them.  We speak with and recieve feedback from our clients regularly.  Those affiliates who show higher levels of client satisfaction recieve improvements to their ranking scores and the number of clients we refer to them goes up accordingly.  At first you may get only a few clients from us.  But, as you do a great job that number will hopefully increase over time.  The overall number of clients we refer will also depend on the number of leads we get in from the $address2, $address3 area and the number of therapists active there.<br><br>
+Below you will find our current pay chart for the various issues as well as a copy of the terms and conditions you agreed to when you applied.  <br><br>If you have questions at any point please feel free to e-mail Heather at heather@ahc.intranets.com and she can help you.  Heather is our affiliate relations manager and is also a very talented hypnotherapist.<br><br>Welcome to our team.  We are proud to have you on board and look forward to a great relationship.  Together, we can keep each other busy... help a lot of people... and generally elevate the art and science of hypnotherapy!<br><br>
+All the best,<br><br>
+Larry Volz, PhD<br>
+Executive Director<br><br>
+<br>";
+?>

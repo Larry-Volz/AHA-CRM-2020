@@ -1,0 +1,71 @@
+<html style="width:300px; Height: 60px;">
+ <head>
+  <title>Select Phrase</title>
+<script language="javascript">
+
+var myTitle = window.dialogArguments;
+document.title = myTitle;
+
+
+function returnSelected() {
+  var idx  = document.all.textPulldown.selectedIndex;
+  var text = document.all.textPulldown[idx].text;
+
+  window.returnValue = text;          // set return value
+  window.close();                     // close dialog
+}
+
+</script>
+<link rel="stylesheet" type="text/css" href="images/style.css">
+<SCRIPT LANGUAGE="JavaScript" SRC="menu/JSCookMenu.js"></SCRIPT>
+<LINK REL="stylesheet" HREF="menu/themes/Office/theme.css" TYPE="text/css">
+<SCRIPT LANGUAGE="JavaScript" SRC="menu/themes/Office/theme.js"></SCRIPT>
+<LINK REL="stylesheet" HREF="menu/themes/Office/theme.css" TYPE="text/css">
+<SCRIPT LANGUAGE="JavaScript" SRC="menu/themes/Office/theme.js"></SCRIPT>
+<script language="JavaScript"><!--
+function checkBox(theBox){
+  var aBox = theBox.form["list[]"];
+  var selAll = false;
+  var i;
+  for(i=0;i<aBox.length;i++){
+    if(aBox[i].checked==false) selAll=true;
+  }
+  if(theBox.name=="selall"){
+    for(i=0;i<aBox.length;i++){
+      aBox[i].checked = selAll;
+    }
+    selAll = !selAll;
+  }
+  //theBox.form.selall.checked = selAll;
+}
+function init(){
+  var theForm = document.f1;
+  var aBox = theForm["list[]"];
+  var selAll = false;
+  var i;
+  for(i=0;i<aBox.length;i++){
+    if(aBox[i].checked==false) selAll=true;
+    aBox[i].onclick = function(){checkBox(this)};
+  }
+  //theForm.selall.checked = selAll;
+}
+//--></script>
+<!--mstheme--><link rel="stylesheet" type="text/css" href="../../../../../../_themes/breeze/bree1011.css"><meta name="Microsoft Theme" content="breeze 1011, default">
+<meta name="Microsoft Border" content="none, default">
+</head>
+<body topmargin=15 leftmargin=0>
+
+<form method=get onSubmit="Set(document.all.ColorHex.value); return false;">
+<div align=center>
+
+<select name="textPulldown">
+<option>The quick brown</option>
+<option>fox jumps over</option>
+<option>the lazy dog.</option>
+</select>
+
+<input type="button" value=" Go " onClick="returnSelected()">
+
+</div>
+</form>
+</body></html>

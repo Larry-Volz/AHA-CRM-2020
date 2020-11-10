@@ -1,0 +1,74 @@
+	
+
+*USING THE PGP SIGNATURE TO AUTHENTICATE TRANSACTIONS*
+This function assumes that you are familiar with CGI scripting.
+
+*Read the RESTRICTIONS below before using this function. As always, test
+your forms before making them live.*
+
+One of the security features built into the transaction system is the
+use of a PGP signature.
+Each transaction confirmation is sent to the merchant's return address
+(ret_addr), signed
+with a PGP signature. This is a bullet-proof security feature that gives a
+merchant the knowledge that the transaction confirmation was sent by the
+processing server.
+
+You will need a PGP application installed on your server that supports
+dynamic verification of an RSA signature. Follow this link for
+information about using PGP with Windows, Unix, Macintosh, Perl, Java,
+C++, etc.:
+The International PGP Home Page <http://www.pgpi.org> (See the Products
+Page)
+
+*You may obtain the Publc Key by scrolling to the bottom of this page.*
+
+*RESTRICTIONS*
+
+# Transactions are only signed when either the PASSBACK or LOOKUP FUNCTION
+is used.
+# As with any other dynamic web page, your ret_addr (return address) must
+be a CGI script or some other application, such as CFM or ASP that is
+capable of parsing the name/value pairs that are passed, including the
+signature.
+# For security reasons, you should ALWAYS pass a unique variable to the
+system using the Passback Function. This will cause the signature to
+have a unique value for each transaction.
+
+*EXAMPLE*
+In this example, the following field values are used:
+
+The ret_addr field is set to "http://www.yoursite.com/cgi-bin/return.cgi"
+The LOOKUP variables requested are /email/ and /phone/
+The PASSBACK variables are /fieldname1/ and /ordernum/
+
+This is the string that is passed to the return address.
+You may need to scroll right to see the entire URL.
+
+http://www.yoursite.com/cgi-bin/return.cgi?email=test%40yourdomain.com&phone=phone&fieldname1=12345&ordernum=order#999&signature=-----BEGIN%20PGP%20SIGNED%20MESSAGE-----%0A%0Ahttp%3A%2F%2Fwww.blablahblah.com%2Fcgi-bin%2Frc2%2Fsomecgi%3Femail%3Dtest%2540blahblahblah.com%26phone%3Dphone%26p1%3Dp1-value%26p2%3Dp2-value%0A-----BEGIN%20PGP%20SIGNATURE-----%0AVersion%3A%202.7%0A%0AiQCVAwUBM9KCHuL3TEC4ItPNAQEtCwP%2FTdzM%2B%2FJQSIWOTXz%2F4VSsuhui1lzmhXQL%0AeQUeHnarwl606lk2joiiIHcwI7djjFXpSxgx49YYGyfs9cFkEXU8sufu5ELRJ9h6%0AapM1FktDruKHHc2A7LC8LJv0YBLJD75nkONMbW%2FWenLpDgMLGTYWn4o%2Ffh07WBpg%0AeiwWXQFyasA%3D%0A%3DmWkA%0A-----END%20PGP%20SIGNATURE-----%0A
+
+
+Included are PUBLIC keys used for validating the order signature. Only
+one key is required. However, both a signed and an unsigned key are
+included. If you are using a publicly-available PGP such as GnuPGP, you
+will most likely require the signed key. (Unsigned key) -----BEGIN PGP
+PUBLIC KEY BLOCK----- Version: 4.5
+mQCNAjZu+eUAAAEEAOBmQnbjWz8uyyZ3uMqAE9sbSvXDAA98qN/HG4Bp+A7oPk9i
+vH1x27e7dA4A3DflBJLkImALsEhd+npcM33jvao7M4HQUGnZo+bCFkP6aK8eRO4K
+bu9nmO1xuFl16jDlP413qpSzylhIoSvmDHbYj+Cs45hFyzJcd7HOJqLFYyxlAAUR
+tBZpVHJhbnNhY3QgdjQgU2lnbmF0dXJl =iK4j -----END PGP PUBLIC KEY
+BLOCK----- (Signed key) -----BEGIN PGP PUBLIC KEY BLOCK----- Version:
+4.5 mQCNAjZu+eUAAAEEAOBmQnbjWz8uyyZ3uMqAE9sbSvXDAA98qN/HG4Bp+A7oPk9i
+vH1x27e7dA4A3DflBJLkImALsEhd+npcM33jvao7M4HQUGnZo+bCFkP6aK8eRO4K
+bu9nmO1xuFl16jDlP413qpSzylhIoSvmDHbYj+Cs45hFyzJcd7HOJqLFYyxlAAUR
+tBZpVHJhbnNhY3QgdjQgU2lnbmF0dXJliQCVAgUQOzEmwbHOJqLFYyxlAQE83gP/
+T7H+XNhKz2kWE+dTTcO2O+XwG1Wjjc6FDVgmQ47qSjDZ0oIbxfBiPF33Zv4dlAc/
+8OkRYs1qsTNbYoy3cyG2WY1Rx+NhfHbVPM9SS3sUMF0aRL3b+8hvhU9OnvPLP8aq
+R9g8lEpASzngkAFdnzAwohD4ltAsDICw4OnTUQTgLcqJAFUDBRA2bvqrcnBcq/4x
+V/EBAaVZAf9WHI7lzMl3poaGE6MJyVsXe/2IIrtmNtsVUXpjkbEyqcZ5pJd2kLNZ
+jIZBYcBgQAzFFSp/rSg7IJW6q9ZcWsqG =brHz -----END PGP PUBLIC KEY BLOCK-----
+
+ 
+
+ 
+

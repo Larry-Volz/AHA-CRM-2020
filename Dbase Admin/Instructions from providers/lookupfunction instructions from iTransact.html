@@ -1,0 +1,123 @@
+<HTML>
+
+<HEAD>
+
+<TITLE>Lookup Function</TITLE>
+
+
+
+<meta name="Microsoft Border" content="r, default">
+</HEAD>
+
+
+
+<body><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<center>
+
+<TABLE border=0 cellpadding=0  width=590>
+
+<TR>
+<TD align=center width=50%>
+<FORM>
+<input type=button value="Go Back" onClick="history.back(-1)" >
+</form >
+</TD>
+
+<TD align=center width=50%>
+<form>
+<input type=button value='Close Window' onClick='window.close ()'>
+</form>
+</TD>
+
+<TR>
+<TD colspan=2>
+
+<B>THE LOOKUP FUNCTION</B><BR>
+<font size=-1>This function assumes that you are familiar with CGI scripting.<BR>
+Related Links: <a href="passback2.html">Passback Function</a> | <a href="ret_mode.html">Return Mode Function</a> | <a href="returnaddr.html">Return Address</a> | 
+<a href="recur_post.html">Recurring Postback</a> | <a href="pgp.html">PGP</a></font><P>
+
+<B><font color=red>Read the RESTRICTIONS below before using this function.  As always, test your forms before making them live.</font></B><P>
+
+The Lookup Function allows you to request specific customer data from the processing server at the time a
+transaction is processed. All data requested using the Lookup Function is sent directly to the return address (ret_addr) specified in the order form.  You may request as many of these as you'd like in one order form.<P>
+
+Using the Lookup Function, customer data may be posted directly to a script on your server and entered directly
+into your local database.<P>
+
+Fields that are available for use with this function are:<p>
+
+<b>first_name<br>
+last_name<br>
+address<br>
+city<br>
+state<br>
+zip<br>
+country<br>
+phone<br>
+email<p>
+
+sfname<br>
+slname<br>
+saddr<br>
+scity<br>
+sstate<br>
+szip<br>
+sctry<p>
+
+authcode</b> (Returns the credit card authorization code.)<br>
+<b>cc_last_four</b> (Returns the last four digits of the card number.)<br>
+<b>ck_last_four</b> (Returns the last four digits of the checking account number.)<br>
+<b>cc_name</b> (Returns the name of the card type used. "Visa", for example.)<br>
+<b>total</b> (Returns the transaction total.)<br>
+<b>test_mode</b> (Returns "1" if your account is in test mode or "0" if it is not in test mode.)<br>
+<b>when</b> (Time/date stamp in format of "20010509134443" - meaning 05/09/2001 at
+13:44:43)<br>
+<b>xid</b> (Returns the transaction ID.)<br>
+<b>avs_response</b> (Returns the address verification response.)<br>
+<b>cvv2_response</b> (Returns the CVV response.)<br>
+<b>confemail</b> (Returns "1" if your account is set to send email confirmations to your customers or "0" if 
+confirmations are not sent.)<br>
+<!--
+<b>recur_recipe</b> (Returns the recurring recipe used for the transaction.)<br>
+<b>recur_reps</b> (Returns the recurring repetition value submitted with the transaction.)<br>
+-->
+<b>email_text, email_textx</b> (Returns the values submitted in the <a href="emailtext.html">email_text
+fields</a>.)<br>
+
+<br>
+
+<B>CONSIDERATIONS</B><BR>
+<LI>As with any other dynamic web page, your ret_addr (return address) must be a CGI script or some other application, such as CFM or ASP that is capable of parsing the name/value pairs that are passed.
+<LI>Requested lookup fields that do not have a value will not be included in the information passed back.
+<LI>While in test mode, an authcode lookup will return '000000' and an xid lookup will return '9999999999'.<P>
+
+<B>EXAMPLE</B><BR>
+To use the Lookup Function, simply add the following HTML code to your order form with the appropriate field name.  In the example below, the ret_addr field in the order form is:<BR>
+"http://www.yourdomain.com/cgi-bin/return.cgi"<P>
+
+<B>&lt;INPUT type="hidden" name="lookup" value="authcode"&gt;<BR>
+&lt;INPUT type="hidden" name="lookup" value="email"&gt;<BR>
+&lt;INPUT type="hidden" name="lookup" value="total"&gt;<BR>
+&lt;INPUT type="hidden" name="lookup" value="xid"&gt;<BR>
+&lt;INPUT type="hidden" name="lookup" value="phone"&gt;</B><P>
+
+After a successful order has been completed, the customer is returned to the following URL.  <font size=-1>(Orders are always signed with a PGP Signature when either the LOOKUP or PASSBACK function is used.)</font><P>
+
+<B>http://www.yourdomain.com/cgi-bin/return.cgi?authcode=852346&email=somename%40domain.com&total=29.95&xid=987654&phone=8015551212&signature=PGP SIGNATURE HERE</B><P>
+
+</TD>
+
+</TABLE>
+<P>
+&nbsp;
+<P>
+&nbsp;
+<P>
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>&nbsp;</p>
+
+</td></tr><!--msnavigation--></table></BODY>
+</HTML>

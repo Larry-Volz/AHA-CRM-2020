@@ -1,0 +1,3 @@
+1) Upload all files in the zip archive
+2) Chmod includes/config.php to 0777
+3) Run install.php file

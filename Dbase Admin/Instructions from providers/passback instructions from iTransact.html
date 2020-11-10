@@ -1,0 +1,107 @@
+<HTML>
+
+<HEAD>
+
+<TITLE>Passback Function</TITLE>
+
+<meta name="Microsoft Border" content="r, default">
+</HEAD>
+
+<body><!--msnavigation--><table dir="ltr" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<center>
+
+<TABLE border=0 cellpadding=0  width=590>
+
+<TR>
+<TD align=center width=50%>
+<FORM>
+<input type=button value="Go Back" onClick="history.back(-1)" >
+</form >
+</TD>
+
+<TD align=center width=50%>
+<form>
+<input type=button value='Close Window' onClick='window.close ()'>
+</form>
+</TD>
+
+<TR>
+<TD colspan=2>
+
+<B>THE PASSBACK FUNCTION</B><BR>
+<font size=-1>This function assumes that you are familiar with CGI scripting.<BR>
+Related Links: <a href="lookup.html">Lookup Function</a> | <a href="ret_mode.html">Return Mode Function</a> | <a href="returnaddr.html">Return Address</a> | 
+<a href="recur_post.html">Recurring Postback</a> | <a href="pgp.html">PGP</a></font><P>
+
+
+<B><font color=red>Read the RESTRICTIONS below before using this function.  As always, test your forms before making them live.</font></B><P>
+
+The Passback Function enables you to include input variables in your order form that are passed back to your
+return address after the transaction is completed.  This allows you to maintain user session, offer real-time
+delivery of software, access to member-only areas, etc.  This function also allows information for successful orders to be written to an online database in realtime.<P>
+
+For example, you can pass an invoice number, customer identification, PIN numbers, and more, giving you complete
+control of the data received after a transaction completes.<P>
+
+To use the PASSBACK FUNCTION, simply add the passback fields to your order forms(s) as shown in the examples
+below.  (You may include as many Passback variables as you would like.)<P>
+
+<B>NOTE</B><BR>
+You may select how these variables are returned to your return address by using the <a href="ret_mode.html">Return
+Mode Function</a>. They
+will either be sent as part of the "query_string" or as name/value pairs from an HTML POST.<P>
+
+<B>RESTRICTIONS</B><BR>
+<LI>Field names used for the <a href="lookup.html">Lookup Function</a> are reserved and may not be used as
+Passback field names.  However, the Passback Function may be used to request the contents of each description,
+cost, and quantity.<BR>
+<LI>Your ret_addr (return address) must be a script (such as Perl, PHP, ASP, CFM) that is capable of accepting and
+parsing variables posted from an HTML form.<P>
+
+<B>EXAMPLE</B><BR>
+In this example, the ret_addr field in the order form was set to "http://www.yoursite.com/cgi-bin/return.cgi".  
+This example shows variables returned as part of the query_string.<P>
+
+&lt;INPUT type="hidden" name="passback" value="fieldname1"&gt;<BR>
+&lt;INPUT type="hidden" name="fieldname1" value="12345"&gt;<P>
+
+&lt;INPUT type="hidden" name="passback" value="ordernum"&gt;<BR>
+&lt;INPUT type="hidden" name="ordernum" value="order#999"&gt;<P>
+
+After a successful order has been completed, the customer is returned to the following URL.  <font size=-1>(Orders are always signed with a PGP Signature when either the LOOKUP or PASSBACK fuction is used.)</font><P>
+
+<B>http://www.yoursite.com/cgi-bin/return.cgi?fieldname1=12345&ordernum=order#999&signature=PGP SIGNATURE HERE</B><P>
+
+You can use as many PASSBACK variables as necessary with whatever variable names you'd like.  The above example uses two variables.  They are named fieldname1 and ordernum.<P>
+
+Please note that each passback field must contain a value.  If the field contains no value, you will receive a "nonexistant passback parameter" error.<P>
+
+<HR>
+
+If you would like to allow your customers to select a user name and password for access into your site, the Passback Variables may look like the following:<P>
+
+<B>&lt;INPUT type="hidden" name="passback" value="username"&gt;<BR>
+&lt;INPUT type="text" name="username"&gt;<P>
+
+&lt;INPUT type="hidden" name="passback" value="password"&gt;<BR>
+&lt;INPUT type="text" name="password"&gt;</B><P>
+
+If the customer's order is successful, the user name and password will be passed back to you in the query_string.<P>
+
+**Please note that this example is not a secure method of allowing access into your site.
+
+</TD>
+
+</TABLE>
+<P>
+&nbsp;
+<P>
+&nbsp;
+<P>
+
+<!--msnavigation--></td><td valign="top" width="24"></td><td valign="top" width="1%">
+<p>&nbsp;</p>
+
+</td></tr><!--msnavigation--></table></BODY>
+</HTML>

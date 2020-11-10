@@ -1,0 +1,19 @@
+[25-Mar-2006 02:10:42] PHP Parse error:  parse error, unexpected ':', expecting ',' or ';' in /home/america2/public_html/intranet/Dbase Admin/my_contacts/do_mc_delcontact.php on line 33
+[25-Mar-2006 23:02:13] PHP Warning:  mysql_numrows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 14
+[25-Mar-2006 23:03:38] PHP Warning:  mysql_numrows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 13
+[25-Mar-2006 23:04:03] PHP Warning:  mysql_numrows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 13
+[25-Mar-2006 23:05:53] PHP Warning:  mysql_numrows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 13
+[25-Mar-2006 23:09:42] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 14
+[25-Mar-2006 23:13:42] PHP Warning:  mysql_fetch_assoc(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 14
+[25-Mar-2006 23:14:56] PHP Parse error:  parse error, unexpected '}' in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 18
+[25-Mar-2006 23:15:45] PHP Warning:  mysql_numrows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 15
+[25-Mar-2006 23:16:08] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 15
+[25-Mar-2006 23:17:47] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 15
+[25-Mar-2006 23:20:39] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 15
+[25-Mar-2006 23:29:21] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 12
+[25-Mar-2006 23:36:48] PHP Parse error:  parse error, unexpected '}' in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 23
+[25-Mar-2006 23:44:14] PHP Warning:  mysql_result(): first not found in MySQL result index 3 in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 21
+[25-Mar-2006 23:44:14] PHP Warning:  mysql_result(): last not found in MySQL result index 3 in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 22
+[25-Mar-2006 23:44:14] PHP Warning:  mysql_result(): phone not found in MySQL result index 3 in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 23
+[25-Mar-2006 23:44:14] PHP Warning:  mysql_result(): mobile not found in MySQL result index 3 in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 24
+[25-Mar-2006 23:44:14] PHP Warning:  mysql_result(): web not found in MySQL result index 3 in /home/america2/public_html/intranet/Dbase Admin/my_contacts/updated.php on line 27
