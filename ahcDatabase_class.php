@@ -1,4 +1,4 @@
-<?
+<?php
 
 //METHOD TO CONNECTS TO MAIN AHC DATABASE.  CALL BY:   $ahcDB->dbConnect();
 
@@ -111,13 +111,18 @@
     global $db_name,$connection,$db;
 
 
+//USE THESE WHEN DEPLOYING TO DREAMHOST!!
+//     $db_name = "america2_AHC";
 
-    $db_name = "america2_AHC";
+//         $servername = "mysql.americanhypnotherapyassociation.com";
+//             $username = "larryvolz";
+//             $password = "ZacNat727";
+//             $dbname = "america2_ahc";
 
-        $servername = "mysql.americanhypnotherapyassociation.com";
-            $username = "larryvolz";
-            $password = "ZacNat727";
-            $dbname = "america2_ahc";
+$servername = 'localhost';
+$username = "root";
+$password = "";
+$dbname = "america2_ahc";
 
 
 
